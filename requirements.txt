@@ -5,3 +5,4 @@ pydantic
 python-jose[cryptography] 
 requests
 alembic
+pwdlib[argon2]

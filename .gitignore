@@ -1,2 +1,4 @@
 env-varejo
 __pycache__
+
+*.db
