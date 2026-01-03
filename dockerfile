@@ -7,6 +7,8 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 COPY . .
 
+ENV SECRET_KEY='dev-web-fastapi'
+
 #RUN alembic init alembic
 RUN alembic revision --autogenerate -m "initial migration"
 RUN alembic upgrade head
