@@ -5,10 +5,10 @@ from sqlalchemy.orm import Session
 from .database import get_db
 from .schemas.auth import LoginRequest, RegisterRequest
 from .repositories.user import UserRepository
+from .middleware.auth import is_admin
 
 
 app = FastAPI()
-
 
 
 @app.post('/login')
@@ -30,7 +30,7 @@ def login(request: LoginRequest, db: Session = Depends(get_db)):
 
 
 @app.post('/register')
-def register(request: RegisterRequest, db: Session = Depends(get_db)):
+def register(request: RegisterRequest, db: Session = Depends(get_db), _=Depends(is_admin)):
     user_repo = UserRepository(db, PasswordHash.recommended())
     db_user = user_repo.register(request)
 
@@ -40,3 +40,8 @@ def register(request: RegisterRequest, db: Session = Depends(get_db)):
         'email': db_user.email,
         'is_active': db_user.is_active,
     }
+
+
+@app.get('/product/categories')
+def get_product_categories(db: Session = Depends(get_db), _=Depends(is_admin)):
+    pass

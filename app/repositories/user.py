@@ -49,7 +49,7 @@ class UserRepository:
         return user
 
 
-    def register(self, user_data: RegisterRequest):
+    def register(self, user_data: RegisterRequest, role: str = 'user'):
 
         db_user = Users(
             username=user_data.username,
@@ -57,7 +57,7 @@ class UserRepository:
             email=user_data.email,
             hashed_password=self.password_hasher.hash(user_data.password),
             is_active=True,
-            role='admin'
+            role=role
         )
 
         self.db_session.add(db_user)
