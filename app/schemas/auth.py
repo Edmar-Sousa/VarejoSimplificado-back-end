@@ -3,7 +3,7 @@ from pydantic import BaseModel, EmailStr, SecretStr, Field, validator
 
 class LoginRequest(BaseModel):
     email: EmailStr = Field(..., example="Email válido")
-    password: SecretStr = Field(..., example="Senha segura")
+    password: str = Field(..., example="Senha segura")
 
     @validator('password', pre=True)
     def validate_password(cls, value):

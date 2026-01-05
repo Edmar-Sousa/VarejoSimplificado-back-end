@@ -1,13 +1,13 @@
-from fastapi import FastAPI, Depends
+from fastapi import FastAPI, Depends, Query
 from fastapi.middleware.cors import CORSMiddleware
 from pwdlib import PasswordHash
 from sqlalchemy.orm import Session
 
 from .database import get_db
+from .repositories.products import ProductCategoryRepository, ProductRepository
 from .schemas.auth import LoginRequest, LoginResponse, RegisterRequest, RegisterResponse
-from .schemas.products import ProductCategorySchema
+from .schemas.products import ProductCategorySchema, ProductSchema
 from .repositories.user import UserRepository
-from .repositories.products import ProductCategoryRepository
 from .middleware.auth import is_admin, is_auth
 
 
@@ -85,3 +85,40 @@ def delete_product_category(category_id: int, db: Session = Depends(get_db), tok
     product_category_repo.delete_product_category(category_id)
 
     return {'detail': 'Categoria de produto deletada com sucesso.'}
+
+
+@app.get('/products')
+def get_products(
+    db: Session = Depends(get_db), 
+    page: int = Query(1, ge=1), 
+    per_page: int = Query(10, ge=1), 
+    token=Depends(is_auth)
+):
+    product_repo = ProductRepository(db)
+    return product_repo.get_all_products(page, per_page)
+
+
+@app.get('/products/{product_id}')
+def get_product(product_id: int, db: Session = Depends(get_db), token=Depends(is_auth)):
+    product_repo = ProductRepository(db)
+    return product_repo.get_product_with_id(product_id)
+
+
+@app.post('/products')
+def create_product(product: ProductSchema, db: Session = Depends(get_db), token=Depends(is_auth)):
+    product_repo = ProductRepository(db)
+    return product_repo.create_product(product)
+
+
+@app.put('/products/{product_id}')
+def update_product(product_id: int, product: ProductSchema, db: Session = Depends(get_db), token=Depends(is_auth)):
+    product_repo = ProductRepository(db)
+    return product_repo.update_product(product_id, product)
+
+
+@app.delete('/products/{product_id}')
+def delete_product(product_id: int, db: Session = Depends(get_db), token=Depends(is_auth)):
+    product_repo = ProductRepository(db)
+    product_repo.delete_product(product_id)
+
+    return {'detail': 'Produto deletado com sucesso.'}

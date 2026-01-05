@@ -2,8 +2,8 @@
 from fastapi import HTTPException, status
 from sqlalchemy.orm import Session
 
-from app.models.products import ProductsCategories
-from app.schemas.products import ProductCategorySchema
+from app.models.products import Products, ProductsCategories
+from app.schemas.products import ProductCategorySchema, ProductSchema
 
 class ProductCategoryRepository:
     
@@ -71,3 +71,58 @@ class ProductCategoryRepository:
         self.db_session.refresh(new_category)
 
         return new_category
+    
+
+class ProductRepository:
+    def __init__(self, db_session: Session):
+        self.db_session = db_session
+
+
+    def get_all_products(self, page: int, per_page: int):
+        products = self.db_session.query(Products).offset((page - 1) * per_page).limit(per_page).all()
+        return products
+    
+
+    def get_product_with_id(self, product_id: int):
+        product = self.db_session.query(Products).where(Products.id == product_id).first()
+
+        if not product:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND, 
+                detail='Produto não encontrado.'
+            )
+
+        return product
+    
+
+    def delete_product(self, product_id: int):
+        product = self.db_session.query(Products).where(Products.id == product_id).first()
+
+        if not product:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND, 
+                detail='Produto não encontrado.'
+            )
+
+        self.db_session.delete(product)
+        self.db_session.commit()
+
+    
+    def update_product(self, product_id: int, product_data: ProductSchema):
+        product = self.db_session.query(Products).where(Products.id == product_id).first()
+
+        if not product:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND, 
+                detail='Produto não encontrado.'
+            )
+
+        product.description = product_data.description
+        product.bar_code = product_data.bar_code
+        product.quantity = product_data.quantity
+        product.category_id = product_data.category_id
+
+        self.db_session.commit()
+        self.db_session.refresh(product)
+
+        return product
