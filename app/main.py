@@ -1,4 +1,5 @@
 from fastapi import FastAPI, Depends
+from fastapi.middleware.cors import CORSMiddleware
 from pwdlib import PasswordHash
 from sqlalchemy.orm import Session
 
@@ -12,6 +13,17 @@ from .middleware.auth import is_admin, is_auth
 
 app = FastAPI()
 
+origins = [
+    "http://localhost:3000",
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 @app.post('/login')
 def login(request: LoginRequest, db: Session = Depends(get_db)):

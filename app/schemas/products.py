@@ -1,6 +1,6 @@
+from pydantic import BaseModel
 
 
-
-class ProductCategorySchema:
+class ProductCategorySchema(BaseModel):
     name: str
     description: str
