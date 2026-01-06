@@ -35,6 +35,7 @@ def upgrade() -> None:
     sa.Column('description', sa.String(), nullable=False),
     sa.Column('bar_code', sa.String(), nullable=False),
     sa.Column('quantity', sa.Integer(), nullable=False),
+    sa.Column('price', sa.Integer(), nullable=False),
     sa.Column('category_id', sa.Integer(), nullable=False),
     sa.ForeignKeyConstraint(['category_id'], ['products_categories.id'], ),
     sa.PrimaryKeyConstraint('id')

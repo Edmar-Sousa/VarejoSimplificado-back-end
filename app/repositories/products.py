@@ -95,6 +95,22 @@ class ProductRepository:
         return product
     
 
+    def create_product(self, product_data: ProductSchema):
+        new_product = Products(
+            description=product_data.description,
+            bar_code=product_data.bar_code,
+            quantity=product_data.quantity,
+            price=product_data.price,
+            category_id=product_data.category_id
+        )
+
+        self.db_session.add(new_product)
+        self.db_session.commit()
+        self.db_session.refresh(new_product)
+
+        return new_product
+    
+
     def delete_product(self, product_id: int):
         product = self.db_session.query(Products).where(Products.id == product_id).first()
 
@@ -121,6 +137,7 @@ class ProductRepository:
         product.bar_code = product_data.bar_code
         product.quantity = product_data.quantity
         product.category_id = product_data.category_id
+        product.price = product_data.price
 
         self.db_session.commit()
         self.db_session.refresh(product)

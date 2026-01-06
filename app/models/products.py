@@ -21,6 +21,7 @@ class Products(Base):
     bar_code: Mapped[str] = mapped_column(unique=True, index=True)
 
     quantity: Mapped[int] = mapped_column()
+    price: Mapped[int] = mapped_column()
 
     category_id: Mapped[int] = mapped_column(ForeignKey('products_categories.id'))
     category: Mapped['ProductsCategories'] = relationship('ProductsCategories')
