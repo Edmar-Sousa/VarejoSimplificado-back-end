@@ -23,10 +23,12 @@ def get_product_categories(db: Session = Depends(get_db), token=Depends(is_auth)
     product_category_repo = ProductCategoryRepository(db)
     return product_category_repo.get_all_categories()
 
+
 @router.get('/categories/{category_id}')
 def get_product_category(category_id: int, db: Session = Depends(get_db), token=Depends(is_auth)):
     product_category_repo = ProductCategoryRepository(db)
     return product_category_repo.get_category_with_id(category_id)
+
 
 @router.put('/categories/{category_id}')
 def update_product_category(category: ProductCategorySchema, category_id: int, db: Session = Depends(get_db), token=Depends(is_auth)):

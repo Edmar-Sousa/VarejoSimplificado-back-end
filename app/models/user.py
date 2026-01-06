@@ -17,7 +17,7 @@ class Users(Base):
     is_active: Mapped[bool] = mapped_column(default=True)
 
     role: Mapped[str] = mapped_column(
-        Enum('admin', 'user', name='user_roles'), default='user'
+        Enum('admin', 'user', 'supermarket_cashier', name='user_roles'), default='user'
     )
 
     created_at: Mapped[datetime] = mapped_column(
