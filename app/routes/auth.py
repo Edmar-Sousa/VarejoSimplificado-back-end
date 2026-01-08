@@ -2,9 +2,8 @@ from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 from pwdlib import PasswordHash
 
-from app.schemas.auth import LoginRequest, LoginResponse, RegisterRequest, RegisterResponse
+from app.schemas.auth import LoginRequest, LoginResponse
 from app.repositories.user import UserRepository
-from app.middleware.auth import is_admin
 from app.database import get_db
 
 

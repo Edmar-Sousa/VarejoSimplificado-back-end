@@ -8,7 +8,7 @@ from datetime import datetime, timedelta, timezone
 from sqlalchemy.orm import Session
 
 
-from app.schemas.auth import LoginRequest, RegisterRequest
+from app.schemas.auth import LoginRequest, RegisterUser
 from app.models.user import Users
 
 
@@ -49,7 +49,7 @@ class UserRepository:
         return user
 
 
-    def register(self, user_data: RegisterRequest, role: str = 'user'):
+    def register(self, user_data: RegisterUser, role: str = 'user'):
 
         db_user = Users(
             username=user_data.username,
@@ -82,7 +82,7 @@ class UserRepository:
         return user
     
 
-    def update_user(self, user_id: int, user_data: RegisterRequest):
+    def update_user(self, user_id: int, user_data: RegisterUser):
         user = self.db_session.query(Users).where(Users.id == user_id).first()
     
         if not user:

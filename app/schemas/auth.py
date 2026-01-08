@@ -22,7 +22,7 @@ class RegisterUser(BaseModel):
     username: str = Field(..., example="Nome de Usuario")
     full_name: str = Field(..., example="Nome Completo")
     email: EmailStr = Field(..., example="Email válido")
-    password: SecretStr = Field(..., example="Senha segura")
+    password: str = Field(..., example="Senha segura")
 
 
 class RegisterResponse(BaseModel):
