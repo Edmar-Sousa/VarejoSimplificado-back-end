@@ -1,12 +1,5 @@
-from fastapi import FastAPI, Depends, Query
+from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from pwdlib import PasswordHash
-from sqlalchemy.orm import Session
-
-from .database import get_db
-from .repositories.products import ProductRepository
-from .schemas.products import ProductSchema
-from .middleware.auth import is_auth
 
 from .routes.auth import router as auth_router
 from .routes.products.categories import router as product_categories_router

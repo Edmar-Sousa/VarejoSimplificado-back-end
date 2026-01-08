@@ -65,3 +65,45 @@ class UserRepository:
         self.db_session.refresh(db_user)
 
         return db_user
+    
+
+    def get_all_users(self, page: int, per_page: int):
+        offset = (page - 1) * per_page
+        users = self.db_session.query(Users).offset(offset).limit(per_page).all()
+        return users
+    
+
+    def get_user_by_id(self, user_id: int):
+        user = self.db_session.query(Users).where(Users.id == user_id).first()
+
+        if not user:
+            raise HTTPException(status_code=404, detail='Usuário não encontrado.')
+        
+        return user
+    
+
+    def update_user(self, user_id: int, user_data: RegisterRequest):
+        user = self.db_session.query(Users).where(Users.id == user_id).first()
+    
+        if not user:
+            raise HTTPException(status_code=404, detail='Usuário não encontrado.')
+
+        user.username = user_data.username
+        user.full_name = user_data.full_name
+        user.email = user_data.email
+        user.hashed_password = self.password_hasher.hash(user_data.password)
+
+        self.db_session.commit()
+        self.db_session.refresh(user)
+
+        return user
+    
+
+    def delete_user(self, user_id: int):
+        user = self.db_session.query(Users).where(Users.id == user_id).first()
+
+        if not user:
+            raise HTTPException(status_code=404, detail='Usuário não encontrado.')
+
+        self.db_session.delete(user)
+        self.db_session.commit()

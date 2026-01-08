@@ -18,7 +18,7 @@ class LoginResponse(BaseModel):
     token_type: str = Field(..., example="Bearer")
 
 
-class RegisterRequest(BaseModel):
+class RegisterUser(BaseModel):
     username: str = Field(..., example="Nome de Usuario")
     full_name: str = Field(..., example="Nome Completo")
     email: EmailStr = Field(..., example="Email válido")

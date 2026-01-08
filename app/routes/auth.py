@@ -29,15 +29,3 @@ def login(request: LoginRequest, db: Session = Depends(get_db)):
         token_type='Bearer'
     )
 
-
-@router.post('/register')
-def register(request: RegisterRequest, db: Session = Depends(get_db), _=Depends(is_admin)):
-    user_repo = UserRepository(db, PasswordHash.recommended())
-    db_user = user_repo.register(request)
-
-    return RegisterResponse(
-        username=db_user.username,
-        full_name=db_user.full_name,
-        email=db_user.email,
-        is_active=db_user.is_active,
-    )
