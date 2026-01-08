@@ -24,8 +24,14 @@ class RegisterUser(BaseModel):
     email: EmailStr = Field(..., example="Email válido")
     password: str = Field(..., example="Senha segura")
 
+    @validator('password', pre=True)
+    def validate_password(cls, value):
+        if len(value) < 8:
+            raise ValueError('Senha deve ter pelo menos 8 caracteres.')
 
-class RegisterResponse(BaseModel):
+        return value
+
+class ResponseUser(BaseModel):
     username: str = Field(..., example="Nome de Usuario")
     full_name: str = Field(..., example="Nome Completo")
     email: EmailStr = Field(..., example="Email válido")

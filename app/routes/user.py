@@ -1,10 +1,10 @@
 from fastapi import APIRouter, Depends, Query
+from typing import List
 
-from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 from pwdlib import PasswordHash
 
-from app.schemas.auth import RegisterUser, RegisterResponse
+from app.schemas.auth import RegisterUser, ResponseUser
 from app.repositories.user import UserRepository
 from app.middleware.auth import is_admin
 from app.database import get_db
@@ -14,19 +14,14 @@ router = APIRouter(tags=['Users'])
 
 
 
-@router.post('/users')
+@router.post('/users', response_model=ResponseUser)
 def register(request: RegisterUser, db: Session = Depends(get_db), _=Depends(is_admin)):
     user_repo = UserRepository(db, PasswordHash.recommended())
     db_user = user_repo.register(request)
 
-    return RegisterResponse(
-        username=db_user.username,
-        full_name=db_user.full_name,
-        email=db_user.email,
-        is_active=db_user.is_active,
-    )
+    return db_user
 
-@router.get('/users')
+@router.get('/users', response_model=List[ResponseUser])
 def get_users(
     db: Session = Depends(get_db), 
     page: int = Query(1, ge=1),
@@ -37,7 +32,7 @@ def get_users(
     return user_repo.get_all_users(page, per_page)
 
 
-@router.get('/users/{user_id}')
+@router.get('/users/{user_id}', response_model=ResponseUser)
 def get_user(
     user_id: int, 
     db: Session = Depends(get_db), 
@@ -47,7 +42,7 @@ def get_user(
     return user_repo.get_user_by_id(user_id)
 
 
-@router.put('/users/{user_id}')
+@router.put('/users/{user_id}', response_model=ResponseUser)
 def update_user(
     user_id: int, 
     request: RegisterUser, 
