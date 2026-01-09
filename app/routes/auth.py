@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 from pwdlib import PasswordHash
 
-from app.schemas.auth import LoginRequest, LoginResponse
+from app.schemas.auth import LoginRequest, LoginResponse, RegisterUser, ResponseUser
 from app.repositories.user import UserRepository
 from app.database import get_db
 
@@ -28,3 +28,8 @@ def login(request: LoginRequest, db: Session = Depends(get_db)):
         token_type='Bearer'
     )
 
+
+@router.post('/register', response_model=ResponseUser)
+def register(request: RegisterUser, db: Session = Depends(get_db)):
+    user_repo = UserRepository(db, PasswordHash.recommended())
+    return user_repo.register(request, 'admin')

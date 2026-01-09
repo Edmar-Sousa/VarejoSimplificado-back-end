@@ -54,6 +54,7 @@ class UserRepository:
         db_user = Users(
             username=user_data.username,
             full_name=user_data.full_name,
+            business_id=user_data.business_id,
             email=user_data.email,
             hashed_password=self.password_hasher.hash(user_data.password),
             is_active=True,
@@ -69,7 +70,7 @@ class UserRepository:
 
     def get_all_users(self, page: int, per_page: int):
         offset = (page - 1) * per_page
-        users = self.db_session.query(Users).offset(offset).limit(per_page).all()
+        users = self.db_session.query(Users).where(Users.role != 'admin').offset(offset).limit(per_page).all()
         return users
     
 

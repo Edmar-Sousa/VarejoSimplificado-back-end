@@ -1,5 +1,5 @@
 from pydantic import BaseModel, EmailStr, SecretStr, Field, validator
-
+from typing import Optional
 
 class LoginRequest(BaseModel):
     email: EmailStr = Field(..., example="Email válido")
@@ -24,6 +24,8 @@ class RegisterUser(BaseModel):
     email: EmailStr = Field(..., example="Email válido")
     password: str = Field(..., example="Senha segura")
 
+    business_id: Optional[str]
+
     @validator('password', pre=True)
     def validate_password(cls, value):
         if len(value) < 8:
@@ -36,3 +38,4 @@ class ResponseUser(BaseModel):
     full_name: str = Field(..., example="Nome Completo")
     email: EmailStr = Field(..., example="Email válido")
     is_active: bool = Field(..., example=True)
+    business_id: Optional[int]

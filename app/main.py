@@ -5,6 +5,10 @@ from .routes.auth import router as auth_router
 from .routes.products.categories import router as product_categories_router
 from .routes.products import router as products_router
 from .routes.user import router as users_router
+from .database import Base, engine
+
+import app.models
+
 
 app = FastAPI()
 
@@ -19,6 +23,10 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+@app.on_event('startup')
+def startup():
+    Base.metadata.create_all(bind=engine)
 
 app.include_router(auth_router)
 app.include_router(product_categories_router)
