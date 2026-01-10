@@ -79,12 +79,12 @@ class ProductRepository:
 
 
     def get_all_products(self, page: int, per_page: int, business_id: int | None):
-        products = self.db_session.query(Products).offset((page - 1) * per_page).limit(per_page)
+        products = self.db_session.query(Products)
 
         if business_id is not None:
             products = products.where(Products.business_id == business_id)
 
-        return products.all()
+        return products.offset((page - 1) * per_page).limit(per_page).all()
     
 
     def get_product_with_id(self, product_id: int, business_id: int | None):
@@ -104,7 +104,16 @@ class ProductRepository:
         return product
     
 
-    def create_product(self, product_data: ProductSchema, business_id: int):
+    def create_product(self, product_data: ProductSchema, business_id: int | None):
+
+        business_id = business_id if business_id is not None else product_data.business_id
+
+        if business_id is None:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST, 
+                detail='O ID do negócio deve ser fornecido.'
+            )
+
         new_product = Products(
             description=product_data.description,
             bar_code=product_data.bar_code,

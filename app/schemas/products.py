@@ -1,5 +1,5 @@
 from pydantic import BaseModel
-
+from typing import Optional
 
 class ProductCategorySchema(BaseModel):
     name: str
@@ -12,6 +12,7 @@ class ProductSchema(BaseModel):
     quantity: int
     price: int
     category_id: int
+    business_id: Optional[int] = None
 
 class ProductResponseSchema(BaseModel):
     id: int

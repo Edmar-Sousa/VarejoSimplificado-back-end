@@ -33,9 +33,6 @@ def get_product(product_id: int, db: Session = Depends(get_db), token=Depends(is
 
 @router.post('/', response_model=ProductResponseSchema)
 def create_product(product: ProductSchema, db: Session = Depends(get_db), token=Depends(is_auth)):
-    if token['business_id'] is None:
-        return {'detail': 'Usuário não está associado a nenhum negócio.'}
-
     product_repo = ProductRepository(db)
     return product_repo.create_product(product, token['business_id'])
 
