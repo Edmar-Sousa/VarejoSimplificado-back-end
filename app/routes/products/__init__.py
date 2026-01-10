@@ -22,13 +22,13 @@ def get_products(
     token=Depends(is_auth)
 ):
     product_repo = ProductRepository(db)
-    return product_repo.get_all_products(page, per_page)
+    return product_repo.get_all_products(page, per_page, token['business_id'])
 
 
 @router.get('/{product_id}', response_model=ProductResponseSchema)
 def get_product(product_id: int, db: Session = Depends(get_db), token=Depends(is_auth)):
     product_repo = ProductRepository(db)
-    return product_repo.get_product_with_id(product_id)
+    return product_repo.get_product_with_id(product_id, token['business_id'])
 
 
 @router.post('/', response_model=ProductResponseSchema)
@@ -47,9 +47,6 @@ def update_product(
     db: Session = Depends(get_db), 
     token=Depends(is_auth)
 ):
-    if token['business_id'] is None:
-        return {'detail': 'Usuário não está associado a nenhum negócio.'}
-    
     product_repo = ProductRepository(db)
     return product_repo.update_product(product_id, product, token['business_id'])
 
