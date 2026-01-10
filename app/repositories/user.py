@@ -8,7 +8,8 @@ from datetime import datetime, timedelta, timezone
 from sqlalchemy.orm import Session
 
 
-from app.schemas.auth import LoginRequest, RegisterUser
+from app.schemas.auth import LoginRequest, RegisterAdmin
+from app.schemas.user import RegisterUser
 from app.models.user import Users
 
 
@@ -47,6 +48,25 @@ class UserRepository:
             raise HTTPException(status_code=401, detail='Senha esta incorreta.')
         
         return user
+    
+
+    def register_admin(self, user_data: RegisterAdmin, role: str = 'admin'):
+
+        db_user = Users(
+            username=user_data.username,
+            full_name=user_data.full_name,
+            email=user_data.email,
+            business_id=None,
+            hashed_password=self.password_hasher.hash(user_data.password),
+            is_active=True,
+            role=role
+        )
+
+        self.db_session.add(db_user)
+        self.db_session.commit()
+        self.db_session.refresh(db_user)
+
+        return db_user
 
 
     def register(self, user_data: RegisterUser, role: str = 'user'):

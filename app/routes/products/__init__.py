@@ -37,7 +37,12 @@ def create_product(product: ProductSchema, db: Session = Depends(get_db), token=
 
 
 @router.put('/{product_id}')
-def update_product(product_id: int, product: ProductSchema, db: Session = Depends(get_db), token=Depends(is_auth)):
+def update_product(
+    product_id: int, 
+    product: ProductSchema, 
+    db: Session = Depends(get_db), 
+    token=Depends(is_auth)
+):
     product_repo = ProductRepository(db)
     return product_repo.update_product(product_id, product)
 

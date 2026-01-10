@@ -12,6 +12,7 @@ class Business(Base):
 
     full_name: Mapped[str] = mapped_column()
     email: Mapped[str] = mapped_column(unique=True, index=True)
+    phone: Mapped[str] = mapped_column(unique=True)
     cnpj: Mapped[str] = mapped_column(unique=True, index=True)
     is_active: Mapped[bool] = mapped_column(default=True)
 

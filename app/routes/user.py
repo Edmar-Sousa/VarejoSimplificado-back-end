@@ -4,7 +4,7 @@ from typing import List
 from sqlalchemy.orm import Session
 from pwdlib import PasswordHash
 
-from app.schemas.auth import RegisterUser, ResponseUser
+from app.schemas.user import RegisterUser, ResponseUser
 from app.repositories.user import UserRepository
 from app.middleware.auth import is_admin
 from app.database import get_db
