@@ -95,13 +95,14 @@ class ProductRepository:
         return product
     
 
-    def create_product(self, product_data: ProductSchema):
+    def create_product(self, product_data: ProductSchema, business_id: int):
         new_product = Products(
             description=product_data.description,
             bar_code=product_data.bar_code,
             quantity=product_data.quantity,
             price=product_data.price,
-            category_id=product_data.category_id
+            category_id=product_data.category_id,
+            business_id=business_id
         )
 
         self.db_session.add(new_product)
@@ -124,7 +125,7 @@ class ProductRepository:
         self.db_session.commit()
 
     
-    def update_product(self, product_id: int, product_data: ProductSchema):
+    def update_product(self, product_id: int, product_data: ProductSchema, business_id: int):
         product = self.db_session.query(Products).where(Products.id == product_id).first()
 
         if not product:
@@ -138,6 +139,7 @@ class ProductRepository:
         product.quantity = product_data.quantity
         product.category_id = product_data.category_id
         product.price = product_data.price
+        product.business_id = business_id
 
         self.db_session.commit()
         self.db_session.refresh(product)

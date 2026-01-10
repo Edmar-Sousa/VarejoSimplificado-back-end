@@ -23,6 +23,8 @@ class Products(Base):
     quantity: Mapped[int] = mapped_column()
     price: Mapped[int] = mapped_column()
 
+    business_id: Mapped[int] = mapped_column(ForeignKey('businesses.id'))
+
     category_id: Mapped[int] = mapped_column(ForeignKey('products_categories.id'))
     category: Mapped['ProductsCategories'] = relationship('ProductsCategories')
 
